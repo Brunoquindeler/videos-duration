@@ -11,6 +11,17 @@ import (
 	ffprobe "github.com/vansante/go-ffprobe"
 )
 
+var validSuffixes = []string{
+	".mp4",
+	".ts",
+	".mov",
+	".wmv",
+	".avi",
+	".flv",
+	".mkv",
+	".gif",
+}
+
 func main() {
 	if len(os.Args) != 2 {
 		fmt.Println("Defina o diretório onde estão os vídeos Ex: '/caminho/do/diretorio'")
@@ -26,7 +37,7 @@ func main() {
 			return nil
 		}
 
-		if !info.IsDir() && (strings.HasSuffix(strings.ToLower(info.Name()), ".mp4")) {
+		if !info.IsDir() && hasValidSuffix(info.Name(), validSuffixes) {
 			duration, err := getVideoDuration(path)
 			if err != nil {
 				log.Printf("Erro ao obter a duração do vídeo %s: %v", path, err)
@@ -43,6 +54,16 @@ func main() {
 	}
 
 	fmt.Printf("Duração total dos vídeos: %s\n", totalDuration.String())
+}
+
+func hasValidSuffix(name string, suffixes []string) bool {
+	name = strings.ToLower(name)
+	for _, suffix := range suffixes {
+		if strings.HasSuffix(name, suffix) {
+			return true
+		}
+	}
+	return false
 }
 
 func getVideoDuration(filePath string) (time.Duration, error) {
