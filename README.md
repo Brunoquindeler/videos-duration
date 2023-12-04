@@ -2,6 +2,8 @@
 
 ## Ferramenta em GOlang que soma a duração de todos os vídeos .mp4 em um diretório e seus subdiretórios.
 
+### Para utilizar a ferramenta é necessário ter o FFMPEG instalado.
+
 Instalação do FFMPEG (Windows)
 ```
 winget install Gyan.FFmpeg
