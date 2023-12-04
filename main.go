@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -8,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fatih/color"
 	ffprobe "github.com/vansante/go-ffprobe"
 )
 
@@ -22,13 +24,39 @@ var validSuffixes = []string{
 	".gif",
 }
 
+var verboseMode bool
+var help bool
+var directory string
+
+var appName = "videos_duration"
+
+var helpMessage = fmt.Sprintf(`
+Flags:
+	-v | Modo verboso.
+	-d | Diretório a ser escaniado.
+	-h | Modo de ajuda.
+
+Exemplos de uso:
+	%s -d="/caminho/do/diretorio" << Escaneia o diretório passado.
+
+	%s -d="."  << Escaneia o diretório atual.
+
+	%s -v -d="."  << Escaneia em modo verboso.
+
+`, color.CyanString(appName), color.CyanString(appName), color.CyanString(appName))
+
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Println("Defina o diretório onde estão os vídeos Ex: '/caminho/do/diretorio'")
-		os.Exit(1)
+
+	flag.BoolVar(&verboseMode, "v", false, "Modo verboso")
+	flag.BoolVar(&help, "h", false, "Modo de ajuda")
+	flag.StringVar(&directory, "d", "", "Diretório a ser escaniado")
+	flag.Parse()
+
+	if help || directory == "" {
+		fmt.Print(helpMessage)
+		return
 	}
 
-	directory := os.Args[1]
 	totalDuration := time.Duration(0)
 
 	err := filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
@@ -44,6 +72,10 @@ func main() {
 				return nil
 			}
 
+			if verboseMode {
+				fmt.Printf("Nome: %s | Duração: %s\n", color.CyanString(info.Name()), color.GreenString(duration.String()))
+			}
+
 			totalDuration += duration
 		}
 
@@ -53,7 +85,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Duração total dos vídeos: %s\n", totalDuration.String())
+	fmt.Printf("\nDuração total dos vídeos: %s\n", color.GreenString(totalDuration.String()))
 }
 
 func hasValidSuffix(name string, suffixes []string) bool {
