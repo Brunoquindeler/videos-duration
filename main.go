@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -23,6 +24,8 @@ var validSuffixes = []string{
 	".mkv",
 	".gif",
 }
+
+var errTSFile = errors.New("is not .ts video file")
 
 var verboseMode bool
 var help bool
@@ -68,6 +71,9 @@ func main() {
 		if !info.IsDir() && hasValidSuffix(info.Name(), validSuffixes) {
 			duration, err := getVideoDuration(path)
 			if err != nil {
+				if err == errTSFile {
+					return nil
+				}
 				log.Printf("Erro ao obter a duração do vídeo %s: %v", path, err)
 				return nil
 			}
@@ -101,7 +107,10 @@ func hasValidSuffix(name string, suffixes []string) bool {
 func getVideoDuration(filePath string) (time.Duration, error) {
 	data, err := ffprobe.GetProbeData(filePath, 120000*time.Millisecond)
 	if err != nil {
-		log.Printf("Erro ao obter dados: %v", err)
+		// .ts além de ser uma extensão de vídeo também é a extensão de TypeScript
+		if strings.HasSuffix(filePath, ".ts") {
+			return 0, errTSFile
+		}
 		return 0, err
 	}
 	return data.Format.Duration(), nil
