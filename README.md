@@ -26,7 +26,7 @@ sudo apt install ffmpeg -y
 #### Ou você pode rodar ou compilar diretamente.
 
 ```
-go run main.go "caminho/dos/videos/"
+go run main.go -d="caminho/dos/videos/"
 ```
 
 Você pode criar o executável também.
@@ -34,6 +34,23 @@ Você pode criar o executável também.
 go build main.go -o NOMEQUEQUISER
 ```
 
+## Modos de uso
+```
+Flags:
+	-v | Modo verboso.
+	-d | Diretório a ser escaniado.
+	-h | Modo de ajuda.
+
+Exemplos de uso:
+	videos_duration -d="/caminho/do/diretorio" << Escaneia o diretório passado.
+
+	videos_duration -d="."  << Escaneia o diretório atual.
+
+	videos_duration -v -d="."  << Escaneia em modo verboso.
+```
 
 # Exemplo
-![Video de exemplo](./ext-videos-duration.gif)
+
+![Exemplo de modo verboso](./assets/use-example.png)
+
+![Video de exemplo](./assets/ext-videos-duration.gif)
