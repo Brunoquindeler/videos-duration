@@ -21,7 +21,7 @@ sudo apt install ffmpeg -y
 
 ## Rodando
 
-## [Download dos Executáveis](https://github.com/Brunoquindeler/videos-duration/releases/tag/v0.0.1)
+## [Download](https://github.com/Brunoquindeler/videos-duration/releases/tag/v0.0.2)
 
 #### Ou você pode rodar ou compilar diretamente.
 
